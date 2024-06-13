@@ -3,18 +3,27 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 
+const uri = "mongodb+srv://eduardotruvar:Grandeedu.1@atlascluster.h2rffzi.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(bodyParser.json());
 
 // Conectar a la base de datos MongoDB
-mongoose.connect('mongodb://192.168.1.100:27017/Producto 2', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log('Conectado a MongoDB'))
-  .catch(err => console.error(err));
+async function run() {
+    try {
+      // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+      await mongoose.connect(uri, clientOptions);
+      await mongoose.connection.db.admin().command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await mongoose.disconnect();
+    }
+  }
+  run().catch(console.dir);
 
 // Modelo de Usuario
 const UserSchema = new mongoose.Schema({
