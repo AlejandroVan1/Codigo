@@ -13,8 +13,13 @@ app.use(express.json());
 conectDb();
 // Ruta para registrar usuario
 app.post('/api/register', registerRoutes );
+// Ruta para registrar usuario con cuenta de google
+app.post('/api/register-auth2', registerRoutes);
 // Ruta para ingresar usuario
 app.post('/api/login', loginRoutes);
+// Ruta para ingresar usuario con cuenta de google
+app.post('/api/login-auth2', loginRoutes);
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
