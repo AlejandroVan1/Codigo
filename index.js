@@ -1,29 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const conexionMongo = require('./lib/conexionMongo')
 
-const uri = "mongodb+srv://eduardotruvar:Grandeedu.1@atlascluster.h2rffzi.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
-const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const uri = process.env.MONGO_URI;
+const clientOptions = { 
+    serverApi: { 
+        version: '1', 
+        strict: true, 
+        deprecationErrors: true 
+    } 
+};
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(bodyParser.json());
 
 // Conectar a la base de datos MongoDB
-async function run() {
-    try {
-      // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
-      await mongoose.connect(uri, clientOptions);
-      await mongoose.connection.db.admin().command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await mongoose.disconnect();
-    }
-  }
-  run().catch(console.dir);
+conexionMongo(uri, clientOptions);
 
 // Modelo de Usuario
 const UserSchema = new mongoose.Schema({
